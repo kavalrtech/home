@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kavalr - Advanced Two-Wheeler Protection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0a192f;
+            --primary-blue: #112240;
+            --accent-blue: #64ffda;
+            --accent-green: #39ff14;
+            --accent-silver: #ccd6f6;
+            --light-gray: #e6f1ff;
+            --text-light: #a8b2d1;
+            --text-white: #ffffff;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --border-radius: 10px;
+            --section-spacing: 100px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(57, 255, 20, 0.2);
+            border-top: 5px solid var(--accent-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loader-text {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: var(--accent-silver);
+            text-align: center;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            line-height: 1.15;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            line-height: 1.2;
+        }
+
+        h3 {
+            font-size: 1.6rem;
+            line-height: 1.3;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 25, 47, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+            transition: var(--transition);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            color: var(--accent-green);
+            font-size: 1.8rem;
+        }
+
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: var(--text-white);
+        }
+
+        .logo-text span {
+            color: var(--accent-green);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        nav a:hover {
+            color: var(--accent-green);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-green);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-green));
+            color: var(--primary-dark);
+            padding: 12px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(57, 255, 20, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(57, 255, 20, 0.3);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(10, 25, 47, 0.95) 0%, rgba(17, 34, 64, 0.85) 100%), 
+                        url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 650px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            color: var(--accent-green);
+            text-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: var(--primary-blue);
+            padding: 70px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: rgba(23, 42, 69, 0.7);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(100, 255, 218, 0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
+            z-index: 0;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Section Styling */
+        section {
+            padding: var(--section-spacing) 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 70px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent-green);
+            border-radius: 2px;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background-color: var(--primary-blue);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .how-it-works::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100, 255, 218, 0.1) 0%, transparent 70%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: rgba(23, 42, 69, 0.7);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+            border-color: rgba(100, 255, 218, 0.2);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 2.8rem;
+            color: var(--accent-green);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card p {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Features Comparison */
+        .comparison-section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .comparison-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, transparent 70%);
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .comparison-card {
+            background: rgba(23, 42, 69, 0.7);
+            border-radius: var(--border-radius);
+            padding: 35px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .comparison-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(100, 255, 218, 0.05) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .comparison-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+            z-index: 1;
+        }
+
+        .comparison-card h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-green);
+        }
+
+        .comparison-card ul {
+            list-style: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .comparison-card li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.05rem;
+        }
+
+        .comparison-card li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--accent-green);
+        }
+
+        .traditional li::before {
+            content: '\f00d';
+            color: #ff4d4d;
+        }
+
+        /* Our Aim Section */
+        .aim-section {
+            padding: 100px 0;
+            background: var(--primary-dark);
+            text-align: center;
+        }
+
+        .aim-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .aim-card {
+            background: rgba(23, 42, 69, 0.7);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            margin-bottom: 30px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .aim-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-blue), var(--accent-green));
+            opacity: 0.7;
+        }
+
+        .aim-card h3 {
+            color: var(--accent-green);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .aim-card h3 i {
+            font-size: 1.8rem;
+        }
+
+        /* About Us */
+        .team {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .team-member {
+            background: rgba(23, 42, 69, 0.7);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+        }
+
+        .member-img {
+            height: 250px;
+            background: linear-gradient(45deg, var(--primary-blue), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-img::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(100, 255, 218, 0.1) 0%, transparent 70%);
+        }
+
+        .member-img i {
+            font-size: 5rem;
+            color: var(--accent-blue);
+            opacity: 0.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        .member-info {
+            padding: 25px;
+        }
+
+        .member-info h3 {
+            margin-bottom: 5px;
+        }
+
+        /* Testimonials */
+        .scenarios-section {
+            background-color: var(--primary-blue);
+        }
+
+        .scenarios {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .scenario-card {
+            background: rgba(23, 42, 69, 0.7);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scenario-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at bottom right, rgba(100, 255, 218, 0.05) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .scenario-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .scenario-card h3 {
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scenario-card p {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: var(--primary-blue);
+            padding: var(--section-spacing) 0;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: rgba(23, 42, 69, 0.7);
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            padding: 30px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .faq-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top left, rgba(100, 255, 218, 0.05) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .faq-question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .faq-question i {
+            font-size: 1.4rem;
+        }
+
+        .faq-answer {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            background: var(--primary-dark);
+            padding: 100px 0;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .pricing-card {
+            background: rgba(23, 42, 69, 0.7);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(100, 255, 218, 0.05) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .pricing-card.popular {
+            border: 2px solid var(--accent-green);
+            transform: scale(1.03);
+        }
+
+        .pricing-card.popular::before {
+            content: 'BEST VALUE';
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: var(--accent-green);
+            color: var(--primary-dark);
+            padding: 6px 40px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transform: rotate(45deg);
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin: 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .price span {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pricing-features li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .pricing-features li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--accent-green);
+        }
+
+        /* Contact Section */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .contact-form {
+            background: rgba(23, 42, 69, 0.7);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at bottom left, rgba(100, 255, 218, 0.05) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .contact-form h3 {
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            background: rgba(10, 25, 47, 0.5);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            border-radius: 5px;
+            color: var(--text-white);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 2px rgba(57, 255, 20, 0.1);
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .badge {
+            background: rgba(23, 42, 69, 0.7);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .badge:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+            border-color: rgba(100, 255, 218, 0.2);
+        }
+
+        .badge i {
+            color: var(--accent-green);
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 25, 47, 0.95);
+            padding: 60px 0 30px;
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-green);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+            font-size: 1.05rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-green);
+            transform: translateX(5px);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(100, 255, 218, 0.1);
+            color: var(--accent-green);
+            border-radius: 50%;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .social-icons a:hover {
+            background: var(--accent-green);
+            color: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+
+            .trust-badges {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+                color: var(--text-white);
+                font-size: 1.8rem;
+            }
+            
+            nav ul {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                background: var(--primary-blue);
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 40px 0;
+                gap: 30px;
+                transition: var(--transition);
+            }
+            
+            nav ul.active {
+                left: 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .hero {
+                text-align: center;
+            }
+            
+            .hero-content {
+                margin: 0 auto;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .faq-question {
+                font-size: 1.1rem;
+            }
+
+            .price {
+                font-size: 2.5rem;
+            }
+
+            .pricing-card.popular::before {
+                top: 10px;
+                right: -35px;
+                padding: 5px 35px;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Animation Classes */
+        .animate-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .animate-in.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loader" id="loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">SECURING YOUR RIDE</div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-shield-alt logo-icon"></i>
+                <div class="logo-text">Kav<span>alr</span></div>
+            </a>
+            
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#scenarios">Scenarios</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content animate-in">
+                <h1>Kavalr – <span>Advanced Protection</span> for Every Rider</h1>
+                <p>The next-generation two-wheeler safety system - designed to be your invisible guardian. Advanced AI technology that anticipates danger before it happens, keeping you protected on every journey.</p>
+                <a href="#features" class="cta-button">Explore Features</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card animate-in">
+                    <div class="stat-number">5+</div>
+                    <div class="stat-text">Advanced Sensors</div>
+                </div>
+                <div class="stat-card animate-in">
+                    <div class="stat-number">14</div>
+                    <div class="stat-text">Safety Checks</div>
+                </div>
+                <div class="stat-card animate-in">
+                    <div class="stat-number">0.3</div>
+                    <div class="stat-text">Seconds Early Detection</div>
+                </div>
+                <div class="stat-card animate-in">
+                    <div class="stat-number">99.7</div>
+                    <div class="stat-text">Accuracy Rate (%)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-title animate-in">
+                <h2>How Kavalr Works</h2>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card animate-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI-Powered Detection</h3>
+                    <p>Our neural network analyzes motion patterns 500 times per second, predicting accidents before they happen with 99.7% accuracy.</p>
+                </div>
+                
+                <div class="feature-card animate-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Instant Protection</h3>
+                    <p>Advanced airbag technology deploys in 0.02 seconds, surrounding critical impact zones with protective cushioning.</p>
+                </div>
+                
+                <div class="feature-card animate-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-virus"></i>
+                    </div>
+                    <h3>Impact Shielding</h3>
+                    <p>Reinforced carbon-fiber panels activate for side impacts, providing military-grade protection where you need it most.</p>
+                </div>
+                
+                <div class="feature-card animate-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-satellite"></i>
+                    </div>
+                    <h3>Smart Connectivity</h3>
+                    <p>Real-time GPS tracking and automatic emergency services notification ensure help arrives within minutes of an incident.</p>
+                </div>
+                
+                <div class="feature-card animate-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3>Self-Recharging</h3>
+                    <p>Kinetic energy harvesting powers the system indefinitely - no charging needed for continuous protection.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Comparison Section -->
+    <section class="comparison-section" id="features">
+        <div class="container">
+            <div class="section-title animate-in">
+                <h2>Why Kavalr is Revolutionary</h2>
+            </div>
+            
+            <div class="comparison">
+                <div class="comparison-card traditional animate-in">
+                    <h3>Traditional Safety Gear</h3>
+                    <ul>
+                        <li>Reactive protection only</li>
+                        <li>Limited impact absorption</li>
+                        <li>No emergency response system</li>
+                        <li>Bulky and restrictive</li>
+                        <li>No predictive capabilities</li>
+                        <li>Requires manual charging</li>
+                        <li>No real-time tracking</li>
+                    </ul>
+                </div>
+                
+                <div class="comparison-card animate-in">
+                    <h3>Kavalr Technology</h3>
+                    <ul>
+                        <li>Predictive AI protection</li>
+                        <li>Advanced impact absorption</li>
+                        <li>Automatic emergency response</li>
+                        <li>Sleek and non-restrictive</li>
+                        <li>0.3s early detection system</li>
+                        <li>Self-charging technology</li>
+                        <li>Real-time GPS tracking</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Our Aim Section -->
+    <section class="aim-section">
+        <div class="container">
+            <div class="section-title animate-in">
+                <h2>Our Commitment</h2>
+            </div>
+            
+            <div class="aim-container">
+                <div class="aim-card animate-in">
+                    <h3><i class="fas fa-bullseye"></i> Revolutionizing Rider Safety</h3>
+                    <p>We're committed to fundamentally changing how two-wheeler safety is perceived and implemented globally. Kavalr represents the culmination of 5 years of research and development, with one simple goal: to prevent accidents and save lives.</p>
+                </div>
+                
+                <div class="aim-card animate-in">
+                    <h3><i class="fas fa-globe"></i> Creating a Global Safety Standard</h3>
+                    <p>Our vision is to establish Kavalr as the new benchmark in motorcycle safety, setting standards that manufacturers worldwide will aspire to meet. We envision a future where our technology becomes as fundamental as seatbelts in cars.</p>
+                </div>
+                
+                <div class="aim-card animate-in">
+                    <h3><i class="fas fa-heartbeat"></i> Saving Lives Through Innovation</h3>
+                    <p>At our core, we're driven by the mission to prevent fatalities and reduce serious injuries. Each technological advancement in Kavalr is measured by its potential to save lives and prevent suffering on roads around the world.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-title animate-in">
+                <h2>Our Team</h2>
+                <p class="mission">"Dedicated to making every ride safer through innovation."</p>
+            </div>
+            
+            <div class="team">
+                <div class="team-member animate-in">
+                    <div class="member-img">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <div class="member-info">
+                        <h3>Preran P</h3>
+                    </div>
+                </div>
+                
+                <div class="team-member animate-in">
+                    <div class="member-img">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <div class="member-info">
+                        <h3>Abhay DK</h3>
+                    </div>
+                </div>
+                
+                <div class="team-member animate-in">
+                    <div class="member-img">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <div class="member-info">
+                        <h3>Nidhi BA</h3>
+                    </div>
+                </div>
+                
+                <div class="team-member animate-in">
+                    <div class="member-img">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <div class="member-info">
+                        <h3>Chirag M</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scenarios Section -->
+    <section class="scenarios-section" id="scenarios">
+        <div class="container">
+            <div class="section-title animate-in">
+                <h2>Real World Protection</h2>
+            </div>
+            
+            <div class="scenarios">
+                <div class="scenario-card animate-in">
+                    <h3>Urban Commuting</h3>
+                    <p><strong>Scenario:</strong> Sudden braking in city traffic causes the rider to lose control on a wet surface.</p>
+                    <p><strong>Kavalr Response:</strong> Detects instability 0.3 seconds before the slide begins, deploying protective cushions around critical joints before impact. Integrated brake light flash alerts vehicles behind.</p>
+                    <p><strong>Result:</strong> Rider maintains control with minimal risk of injury, avoiding a potentially serious accident.</p>
+                </div>
+                
+                <div class="scenario-card animate-in">
+                    <h3>Highway Riding</h3>
+                    <p><strong>Scenario:</strong> A vehicle suddenly changes lanes, forcing the rider to make an evasive maneuver at high speed.</p>
+                    <p><strong>Kavalr Response:</strong> AI predicts the loss of stability during the swerve, preparing protection systems while maintaining rider control through micro-adjustments to the stability system.</p>
+                    <p><strong>Result:</strong> Rider avoids collision without losing control, with protection ready to deploy if needed.</p>
+                </div>
+                
+                <div class="scenario-card animate-in">
+                    <h3>Adventure Riding</h3>
+                    <p><strong>Scenario:</strong> Off-road on a remote trail, the rider hits a hidden obstacle and is thrown from the bike.</p>
+                    <p><strong>Kavalr Response:</strong> Full body protection deploys before impact. GPS SOS alerts emergency services with precise coordinates, medical information, and impact severity data.</p>
+                    <p><strong>Result:</strong> Rider protected from serious injury, help dispatched automatically to the exact location.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-title animate-in">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item animate-in">
+                    <div class="faq-question">
+                        <i class="fas fa-question-circle"></i> How does Kavalr detect accidents before they happen?
+                    </div>
+                    <div class="faq-answer">
+                        <p>Kavalr uses a sophisticated neural network that analyzes motion patterns, traction data, and environmental factors at 500 times per second. By comparing real-time data against thousands of accident scenarios, our AI can predict potential accidents 0.3 seconds before they occur, giving the system crucial time to prepare protection systems.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item animate-in">
+                    <div class="faq-question">
+                        <i class="fas fa-cogs"></i> Is installation complicated?
+                    </div>
+                    <div class="faq-answer">
+                        <p>Not at all! Kavalr is designed for easy installation on any two-wheeler. The universal mounting system adapts to all motorcycle, scooter, and e-bike frames. Most customers complete installation in under 15 minutes with no special tools required. We also offer video guides and premium installation services for those who prefer professional help.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item animate-in">
+                    <div class="faq-question">
+                        <i class="fas fa-sync-alt"></i> How does the self-charging technology work?
+                    </div>
+                    <div class="faq-answer">
+                        <p>Kavalr features revolutionary kinetic energy harvesting technology that converts your bike's motion into electrical energy. As you ride, micro-generators capture energy from vibrations and movement, continuously charging the system. This means Kavalr never needs to be plugged in - it's always ready to protect you.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item animate-in">
+                    <div class="faq-question">
+                        <i class="fas fa-shield-alt"></i> What happens after the protection deploys?
+                    </div>
+                    <div class="faq-answer">
+                        <p>After deployment, Kavalr's protection cushions remain inflated for up to 4 hours to ensure ongoing protection. The system automatically notifies emergency services if needed and sends an alert to your designated contacts. Replacement cartridges are easily installed in seconds, getting you back on the road with full protection quickly.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item animate-in">
+                    <div class="faq-question">
+                        <i class="fas fa-lock"></i> Is my data secure with the connected features?
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely. We prioritize your privacy and security. All data is encrypted end-to-end, and we never sell or share your personal information. Location data is only transmitted in emergency situations or with your explicit permission. You have full control over what data is collected and how it's used.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-title animate-in">
+                <h2>Join the Safety Revolution</h2>
+                <p>Be among the first to experience the future of riding protection</p>
+            </div>
+            
+            <div class="contact-container">
+                <div class="contact-form animate-in">
+                    <h3>Contact Us</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bike">Your Bike Type</label>
+                            <select id="bike">
+                                <option>Motorcycle</option>
+                                <option>Scooter</option>
+                                <option>E-Bike</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="package">Preferred Package</label>
+                            <select id="package">
+                                <option>Device Only - ₹14,999</option>
+                                <option>Advanced - ₹32,999</option>
+                                <option>Professional - ₹49,999</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Questions or Special Requests</label>
+                            <textarea id="message"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="cta-button">Send Message</button>
+                    </form>
+                </div>
+                
+                <div class="newsletter animate-in">
+                    <h3>Why Riders Choose Kavalr</h3>
+                    <div class="trust-badges">
+                        <div class="badge">
+                            <i class="fas fa-bolt"></i> 0.3s Early Detection
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-shield-alt"></i> Military-Grade Protection
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-charging-station"></i> Self-Charging Technology
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-map-marker-alt"></i> GPS Emergency Response
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-sync-alt"></i> Easy Cartridge Replacement
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-mobile"></i> Smart App Integration
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 40px;">
+                        <h3>Technology Highlights</h3>
+                        <p>Kavalr incorporates cutting-edge technology to keep you safe:</p>
+                        <ul style="margin-top: 15px; padding-left: 20px;">
+                            <li>5+ advanced sensors for comprehensive monitoring</li>
+                            <li>14 safety checks performed every second</li>
+                            <li>Military-grade impact absorption materials</li>
+                            <li>Real-time connectivity for emergency response</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Kavalr</h3>
+                    <p>The future of two-wheeler safety is here. Advanced protection technology that anticipates danger before it happens.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#how-it-works">Technology</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#scenarios">Scenarios</a></li>
+                        <li><a href="#about">Our Team</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Bangalore, India</li>
+                        <li><i class="fas fa-envelope"></i> support@kavalr.tech</li>
+                        <li><i class="fas fa-clock"></i> Mon-Fri: 9AM - 6PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Kavalr Technologies. All rights reserved. The future of two-wheeler safety is here.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Hide loader when page is loaded
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500);
+        });
+
+        // Sticky header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.padding = '10px 0';
+                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.padding = '15px 0';
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        
+        hamburger.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            hamburger.innerHTML = navMenu.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                if (navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('appear');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-in').forEach(element => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>
